@@ -4,10 +4,17 @@ const Counter = () => {
 
     const [ count, setCount ] = useState(0);
     const [ isOn, setIsOn ] = useState(false);
+    const [mousePosition, setMousePosition] = useState({ x: null, y: null })
 
     useEffect(() => {
-        window.document.title = `Kamu sudah klik button ${count} kali`
-    },);
+        window.document.title = `Kamu sudah klik button ${count} kali`;
+        window.addEventListener('mousemove', handleMouseMove); 
+
+        // clean up function useEffect
+        return () => {
+            window.removeEventListener('mousemove', handleMouseMove); 
+        }
+    }, [count]);
 
     const incrementHandle = () => {
         setCount(prevCount => prevCount + 1)
@@ -15,6 +22,13 @@ const Counter = () => {
 
     const toggleLigth = () => {
         setIsOn(prevIsOn => !prevIsOn)
+    }
+
+    const handleMouseMove = (event) => {
+        setMousePosition({
+            x: event.pageX,
+            y: event.pageY
+        })
     }
 
     return (
@@ -44,7 +58,12 @@ const Counter = () => {
                     }}  
                     alt='flash-light'
                     onClick={toggleLigth}          
-                />           
+                />   
+
+                <h2>Mouse Position</h2>
+                { JSON.stringify(mousePosition, null, 2) }
+                <br/>
+
             </div>
     
     )

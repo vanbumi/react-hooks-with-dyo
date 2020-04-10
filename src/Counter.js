@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Counter = () => {
 
     const [ count, setCount ] = useState(0);
     const [ isOn, setIsOn ] = useState(false);
+
+    useEffect(() => {
+        window.document.title = `Kamu sudah klik button ${count} kali`
+    },);
 
     const incrementHandle = () => {
         setCount(prevCount => prevCount + 1)

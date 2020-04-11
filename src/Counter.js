@@ -1,25 +1,46 @@
 import React, { useState, useEffect } from 'react';
 
 const Counter = () => {
+    const initialLocationState = {
+        latitude: null,
+        longitude: null,
+        speed: null
+    }
 
     const [ count, setCount ] = useState(0);
     const [ isOn, setIsOn ] = useState(false);
     const [ mousePosition, setMousePosition ] = useState({ x: null, y: null });
     const [ status, setStatus ] = useState(navigator.onLine);
+    const [ location, setLocation ] = useState(initialLocationState);
+    let mounted = true;
 
     useEffect(() => {
         window.document.title = `Kamu sudah klik button ${count} kali`;
         window.addEventListener('mousemove', handleMouseMove);
         window.addEventListener('online', handleOnline);
         window.addEventListener('offline', handleOffline); 
+        window.navigator.geolocation.getCurrentPosition(handleGeoLocation);
+        const watchId = window.navigator.geolocation.watchPosition(handleGeoLocation);
 
         // clean up function useEffect
         return () => {
             window.removeEventListener('mousemove', handleMouseMove); 
             window.removeEventListener('online', handleOnline);
             window.removeEventListener('offline', handleOffline); 
+            window.navigator.geolocation.clearWatch(watchId);
+            mounted = false;
         }
     }, [count]);
+
+    const handleGeoLocation = event => {
+        if (mounted) {
+            setLocation({
+                latitude: event.coords.latitude,
+                longitude: event.coords.longitude,
+                speed: event.coords.speed 
+            });
+        }     
+    }
 
     const incrementHandle = () => {
         setCount(prevCount => prevCount + 1)
@@ -80,6 +101,10 @@ const Counter = () => {
                 <h2>Network Status</h2>
                 <p>You are working <strong> {status ? 'Online' : 'Offline'} </strong> Now</p>
 
+                <h2>Geolocation</h2>
+                <p>Latitude is {location.latitude}</p>
+                <p>Longitude is {location.longitude}</p>
+                <p>Your Speed is {location.speed ? location.speed : "0"}</p>
             </div>
     
     )

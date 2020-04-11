@@ -4,15 +4,20 @@ const Counter = () => {
 
     const [ count, setCount ] = useState(0);
     const [ isOn, setIsOn ] = useState(false);
-    const [mousePosition, setMousePosition] = useState({ x: null, y: null })
+    const [ mousePosition, setMousePosition ] = useState({ x: null, y: null });
+    const [ status, setStatus ] = useState(navigator.onLine);
 
     useEffect(() => {
         window.document.title = `Kamu sudah klik button ${count} kali`;
-        window.addEventListener('mousemove', handleMouseMove); 
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('online', handleOnline);
+        window.addEventListener('offline', handleOffline); 
 
         // clean up function useEffect
         return () => {
             window.removeEventListener('mousemove', handleMouseMove); 
+            window.removeEventListener('online', handleOnline);
+            window.removeEventListener('offline', handleOffline); 
         }
     }, [count]);
 
@@ -29,6 +34,14 @@ const Counter = () => {
             x: event.pageX,
             y: event.pageY
         })
+    }
+
+    const handleOnline = () => {
+        setStatus(true);
+    }
+
+    const handleOffline = () => {
+        setStatus(false);
     }
 
     return (
@@ -63,6 +76,9 @@ const Counter = () => {
                 <h2>Mouse Position</h2>
                 { JSON.stringify(mousePosition, null, 2) }
                 <br/>
+
+                <h2>Network Status</h2>
+                <p>You are working <strong> {status ? 'Online' : 'Offline'} </strong> Now</p>
 
             </div>
     

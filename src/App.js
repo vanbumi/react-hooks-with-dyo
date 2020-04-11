@@ -1,6 +1,7 @@
 import React from 'react';
 import Counter from './Counter';
 import Login from './Login';
+import Register from './Register';
 
 function App() {
   return (
@@ -10,6 +11,8 @@ function App() {
       <Counter />
       <hr/>
       <Login />
+      <hr/>
+      <Register />
     </div>
   );
 }
